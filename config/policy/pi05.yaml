@@ -1,0 +1,16 @@
+# π0.5 从 openpi 转换的 lerobot/pi05_base 微调。H200 上全量微调；
+# 4090 笔记本（16GB）只能冒烟：experiment 里覆盖 train_expert_only / gradient_checkpointing / batch_size。
+lerobot:
+  policy.path: lerobot/pi05_base
+  policy.dtype: bfloat16
+  policy.chunk_size: 50
+  policy.n_action_steps: 50
+  policy.gradient_checkpointing: true
+  policy.push_to_hub: false
+  batch_size: 32
+  steps: 30000
+  log_freq: 100
+  save_freq: 5000
+  eval_steps: 2000
+  dataset.eval_split: 0.1
+  num_workers: 8

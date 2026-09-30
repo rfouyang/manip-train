@@ -1,0 +1,27 @@
+# 天轶 2.0 Pro 双臂 + 双 Inspire RH56DFX 灵巧手，与 RoboMIND 2.0 天轶子集同一构型。
+# 特征与 manip-data-platform config/x_humanoid.json 的转换结果一致：
+# state = 当前帧 puppet 关节值，action = 下一帧 puppet 关节值（action[t] = state[t+1]）。
+name: tianyi2_inspire
+fps: 30
+state:
+  feature: observation.state
+  # 数据平台沿用 left_gripper / right_gripper 作为手的维度名，含义是灵巧手整体开合度，不是夹爪。
+  names: [left_shoulder_pitch, left_shoulder_roll, left_shoulder_yaw, left_elbow_pitch,
+          left_wrist_yaw, left_wrist_pitch, left_wrist_roll, left_gripper,
+          right_shoulder_pitch, right_shoulder_roll, right_shoulder_yaw, right_elbow_pitch,
+          right_wrist_yaw, right_wrist_pitch, right_wrist_roll, right_gripper]
+action:
+  feature: action
+  names: same_as_state
+# 策略输入的相机。RoboMIND 天轶只有头部 camera_top（RealSense D435if，640×480）；
+# 深度 feature（observation.images.camera_top_depth）不作为 ACT/DP/π0.5 的输入。
+cameras: [observation.images.camera_top]
+hand:
+  model: Inspire RH56DFX
+  indices: [7, 15]
+  unit: normalized_0_1
+  # ASSUMED：RoboMIND 每只手只记 1 维开合度（实测约 0.5~1.0，1 为张开），RH56DFX 实际有 6 个自由度。
+  # 部署时把 1 维开合度映射到 6 个手指角度（拇指旋转固定）；映射规则需要与采集端确认。
+# state/action 归一化时 std 的下限（rad；手为 0~1 开合度）。单臂任务中不动的手臂 std ~1e-4，不设下限会把噪声放大上千倍。
+normalization:
+  min_std: 0.01

@@ -1,0 +1,21 @@
+# 冒烟：16GB 显存下只训练 action expert（冻结 VLM），batch 1，确认 π0.5 链路可跑；不代表正式训练效果。
+name: synthetic-pi05-smoke
+robot: tianyi2_inspire
+policy: pi05
+dataset:
+  root: data/synthetic_tianyi2_inspire
+  repo_id: local/synthetic_tianyi2_inspire
+clearml:
+  project: manip-train/tianyi2_inspire/synthetic
+  tags: [smoke]
+evaluation:
+  max_episodes: 1
+  max_frames: 60
+lerobot:
+  policy.train_expert_only: true
+  steps: 20
+  batch_size: 1
+  log_freq: 5
+  save_freq: 20
+  eval_steps: 10
+  num_workers: 2

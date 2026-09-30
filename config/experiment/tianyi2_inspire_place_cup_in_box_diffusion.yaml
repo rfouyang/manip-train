@@ -1,0 +1,23 @@
+# 天轶 2.0 + Inspire：RoboMIND 2.0 天轶 place_cup_in_box_with_right_hand（152 条，H5 约 21 GB），
+# 经 manip-data-platform 用 config/x_humanoid.json 转为 v3 后放到 ${MANIP_TRAIN_DATA_DIR} 下。
+name: tianyi2-inspire-place-cup-in-box-diffusion
+robot: tianyi2_inspire
+policy: diffusion
+dataset:
+  root: ${MANIP_TRAIN_DATA_DIR}/robomind2_tianyi_place_cup_in_box_with_right_hand
+  repo_id: local/robomind2_tianyi_place_cup_in_box_with_right_hand
+  version: robomind2.0-tianyi
+clearml:
+  project: manip-train/tianyi2_inspire/place_cup_in_box
+  tags: [diffusion]
+evaluation:
+  max_episodes: 5
+  max_frames: 600
+lerobot:
+  # 其他服务占用约 7.6 GB 显存：batch 16 显存不足（2026-09-30 实测），用 batch 8。
+  steps: 40000
+  batch_size: 8
+  save_freq: 10000
+  eval_steps: 5000
+  log_freq: 200
+  num_workers: 8

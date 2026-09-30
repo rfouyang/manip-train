@@ -1,0 +1,20 @@
+# 冒烟：合成数据集（tests/fixtures/make_synthetic_v3.py），ACT 跑几百步，检查训练、验证、导出与 ClearML 报告的整条链路。
+name: synthetic-act-smoke
+robot: tianyi2_inspire
+policy: act
+dataset:
+  root: data/synthetic_tianyi2_inspire
+  repo_id: local/synthetic_tianyi2_inspire
+clearml:
+  project: manip-train/tianyi2_inspire/synthetic
+  tags: [smoke]
+evaluation:
+  max_episodes: 2
+  max_frames: 300
+lerobot:
+  steps: 300
+  batch_size: 8
+  log_freq: 20
+  save_freq: 300
+  eval_steps: 100
+  num_workers: 2

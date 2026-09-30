@@ -1,0 +1,55 @@
+[project]
+name = "manip-train"
+version = "0.1.0"
+description = "Manipulation policy training and deployment (ACT / Diffusion Policy / pi0.5) on LeRobot v3 datasets"
+readme = "README.md"
+requires-python = ">=3.12,<3.13"
+dependencies = [
+    "lerobot[dataset,diffusion,pi,peft,accelerate-dep]==0.6.1",
+    # Keep PyTorch on the CUDA 12.8 build (same pins as st-lerobot, verified on this machine).
+    "torch==2.10.0",
+    "torchvision==0.25.0",
+    "torchcodec==0.10.0",
+    "clearml>=2.1.12",
+    "loguru>=0.7.3",
+    "matplotlib>=3.9",
+    "msgpack>=1.1",
+    "python-dotenv>=1.2.3",
+    "pyyaml>=6.0",
+    "websockets>=15.0",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+]
+
+[project.scripts]
+manip-train = "app.cli:main"
+
+[build-system]
+requires = ["setuptools>=80"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["app*", "component*", "config*", "util*"]
+
+[tool.uv]
+package = true
+environments = [
+    "sys_platform == 'linux' and platform_machine == 'x86_64'",
+]
+
+[tool.uv.sources]
+torch = [{ index = "pytorch-cu128" }]
+torchvision = [{ index = "pytorch-cu128" }]
+
+[[tool.uv.index]]
+name = "pytorch-cu128"
+url = "https://download.pytorch.org/whl/cu128"
+explicit = true
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+testpaths = ["tests"]

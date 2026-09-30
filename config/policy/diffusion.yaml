@@ -1,0 +1,19 @@
+lerobot:
+  policy.type: diffusion
+  policy.n_obs_steps: 2
+  policy.horizon: 16
+  policy.n_action_steps: 8
+  # 部署延迟：DDPM 100 步约 1 s/chunk（4090 笔记本），DDIM 10 步约为十分之一。
+  policy.noise_scheduler_type: DDIM
+  policy.num_inference_steps: 10
+  # 头部相机 640×480：先缩放到 240×320 再随机裁剪 95%（lerobot 默认不缩放，原图训练慢且显存不够）。
+  policy.resize_shape: [240, 320]
+  policy.crop_ratio: 0.95
+  policy.push_to_hub: false
+  batch_size: 32
+  steps: 200000
+  log_freq: 100
+  save_freq: 20000
+  eval_steps: 5000
+  dataset.eval_split: 0.1
+  num_workers: 8

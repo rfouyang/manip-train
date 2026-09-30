@@ -1,0 +1,23 @@
+# 真实数据冒烟：RoboMIND 2.0 天轶的一条轨迹（place_cup_left_of_plate_with_left_hand），经 manip-data-platform
+# 用 config/x_humanoid.json 原样转换为 v3（同一条轨迹复制为 3 个 episode）。只验证真实分辨率与数据布局能跑通。
+name: robomind-tianyi-sample-act
+robot: tianyi2_inspire
+policy: act
+dataset:
+  root: data/robomind_tianyi_sample
+  repo_id: local/robomind_tianyi_sample
+  version: robomind2.0-tianyi-1traj
+clearml:
+  project: manip-train/tianyi2_inspire/robomind_sample
+  tags: [smoke, robomind]
+evaluation:
+  max_episodes: 1
+  max_frames: 222
+lerobot:
+  steps: 200
+  batch_size: 8
+  log_freq: 50
+  save_freq: 200
+  eval_steps: 100
+  dataset.eval_split: 0.34
+  num_workers: 4
