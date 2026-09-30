@@ -39,6 +39,27 @@ RoboMIND 2.0 天轶数据：用 manip-data-platform 的 `tools/robomind_batch_co
 
 机器人端使用 `component/serving/policy_client.py` 的 `PolicyClient`（只依赖 numpy、msgpack、websockets）。
 
+## 在 H200 上准备
+
+数据集不放在 Git 里，在 H200 上用 manip-data-platform 的分批转换工具直接从 ModelScope 下载并转换：
+
+```bash
+git clone git@github.com:rfouyang/manip-train.git
+git clone -b robomind-batch-convert git@github.com:rfouyang/manip-data-platform.git   # 工具合并到 main 之前用这个分支
+
+# 1. 数据：RoboMIND 2.0 天轶 place_cup_in_box_with_right_hand（152 条，H5 21.3 GB → v3 7.5 GB）
+cd manip-data-platform && uv sync --locked
+MANIP_OUTPUT_DIR=/data/manip uv run python tools/robomind_batch_convert.py   # 任务列表在 main() 中
+
+# 2. 训练环境
+cd ../manip-train && uv sync && cp .env.example .env   # .env 中 MANIP_TRAIN_DATA_DIR=/data/manip
+PYTHONPATH= uv run pytest
+uv run manip-train check config/experiment/tianyi2_inspire_place_cup_in_box_pi05.yaml
+uv run manip-train train config/experiment/tianyi2_inspire_place_cup_in_box_pi05.yaml
+```
+
+未验证：多卡（`accelerate launch`）。当前 `TrainRunner` 在训练后做离线评估和导出，多卡时每个进程都会执行，需要先改成只在主进程执行。
+
 ## 输出
 
 - `output/train/<实验名>/`：lerobot checkpoint（`checkpoints/<step>/pretrained_model` + `training_state`）、`result.json`。
