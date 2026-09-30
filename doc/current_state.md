@@ -93,6 +93,7 @@ ACT 2 万 / 4 万 / 6 万步的 checkpoint（chunk 50）：MAE 0.0256 / 0.0221 /
 
 - 离线评估是开环比较，不是成功率。tianyi-manip 的 MuJoCo 场景是 Robotiq 夹爪，闭环评估需要 Inspire 手的模型。
 - Inspire 手部署映射未定：数据中每只手只有 1 维开合度，RH56DFX 有 6 个自由度（`config/robot/tianyi2_inspire.yaml` 标注 ASSUMED）。
-- 本仓库与 manip-data-platform 的改动都还没有 git commit。
+- 代码已推送（2026-09-30）：manip-train 的 main；manip-data-platform 的分批工具在 `robomind-batch-convert` 分支，待合并。数据集不进 Git，H200 上用分批工具重新转换（README“在 H200 上准备”）。
+- 多卡训练未验证：`TrainRunner` 训练后的离线评估与导出目前每个进程都会执行，需要改成只在主进程执行。
 - 磁盘紧张（剩余 42 GB）：DP 训练输出 12 GB（4 个 checkpoint 含优化器状态）、π0.5 权重缓存在 ~/.cache/huggingface。需要空间时可以只保留导出包（output/models）。
 - 本机 `../tianyi/cherry` 与 `../TianYiRobot/cherry` 的 parquet 已损坏；`~/workspace/data/trajectory.hdf5` 是旧版 H5，数据平台读不了。
